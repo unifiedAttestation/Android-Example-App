@@ -17,5 +17,5 @@ cd Android-Example-App
 
 ## Runtime settings
 - Example-App-Server URL: `http://10.0.2.2:4000` (Android emulator localhost)
-- Update `MainActivity.kt` if running on device.
+- Update `MainActivity.java` if running on device or using a different host.
 - The Unified Attestation service enforces a privileged bind permission. For demo, install the service as a system app or sign the example app with the same key.

@@ -1,4 +1,4 @@
-package com.unifiedattestation.example;
+package net.uattest.example;
 
 import android.os.Bundle;
 import android.widget.Button;
@@ -6,7 +6,7 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.unifiedattestation.sdk.UnifiedAttestationClient;
+import net.uattest.sdk.UnifiedAttestationClient;
 
 import org.json.JSONObject;
 

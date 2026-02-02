@@ -1,7 +1,10 @@
 package net.uattest.example;
 
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -25,7 +28,10 @@ public class MainActivity extends AppCompatActivity {
     private TextView statusText;
     private UnifiedAttestationClient client;
 
-    private final String serverBaseUrl = "http://192.168.90.77:4000";
+    private static final String PREFS = "ua_example_prefs";
+    private static final String KEY_SERVER_URL = "server_url";
+    private String serverBaseUrl = "http://192.168.90.77:4000";
+    private EditText serverUrlInput;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,8 +39,33 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         statusText = findViewById(R.id.statusText);
         Button runButton = findViewById(R.id.runButton);
+        serverUrlInput = findViewById(R.id.serverUrlInput);
 
         client = new UnifiedAttestationClient(this);
+        serverBaseUrl = getSharedPreferences(PREFS, MODE_PRIVATE)
+                .getString(KEY_SERVER_URL, serverBaseUrl);
+        serverUrlInput.setText(serverBaseUrl);
+        serverUrlInput.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                String value = s.toString().trim();
+                if (!value.isEmpty()) {
+                    serverBaseUrl = value;
+                    getSharedPreferences(PREFS, MODE_PRIVATE)
+                            .edit()
+                            .putString(KEY_SERVER_URL, serverBaseUrl)
+                            .apply();
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+            }
+        });
         runButton.setOnClickListener(v -> runAttestationFlow());
     }
 

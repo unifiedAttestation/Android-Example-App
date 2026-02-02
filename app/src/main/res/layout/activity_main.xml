@@ -13,6 +13,15 @@
         android:textSize="18sp"
         android:textStyle="bold" />
 
+    <EditText
+        android:id="@+id/serverUrlInput"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:hint="Example server URL (http://host:4000)"
+        android:inputType="textUri"
+        android:singleLine="true" />
+
     <Button
         android:id="@+id/runButton"
         android:layout_width="wrap_content"

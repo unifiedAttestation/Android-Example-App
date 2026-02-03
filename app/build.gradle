@@ -6,6 +6,22 @@ android {
     namespace 'net.uattest.example'
     compileSdk 34
 
+    def keystorePath = System.getenv("ANDROID_KEYSTORE_PATH")
+    def keystorePassword = System.getenv("ANDROID_KEYSTORE_PASSWORD")
+    def keyAliasValue = System.getenv("ANDROID_KEY_ALIAS")
+    def keyPasswordValue = System.getenv("ANDROID_KEY_PASSWORD")
+
+    if (keystorePath) {
+        signingConfigs {
+            release {
+                storeFile file(keystorePath)
+                storePassword keystorePassword
+                keyAlias keyAliasValue
+                keyPassword keyPasswordValue
+            }
+        }
+    }
+
     defaultConfig {
         applicationId "net.uattest.example"
         minSdk 28
@@ -16,8 +32,21 @@ android {
 
     buildTypes {
         release {
+            if (keystorePath) {
+                signingConfig signingConfigs.release
+            }
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    applicationVariants.all { variant ->
+        if (variant.buildType.name == "release") {
+            variant.outputs.all { output ->
+                def vName = variant.versionName ?: "0.0.0"
+                def vCode = variant.versionCode ?: 0
+                outputFileName = "ua-example-app-${vName}(${vCode}).apk"
+            }
         }
     }
 

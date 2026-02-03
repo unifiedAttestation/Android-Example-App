@@ -157,7 +157,18 @@ public class MainActivity extends AppCompatActivity {
         body.put("canonicalRequest", canonicalRequest);
         body.put("token", token);
         JSONObject response = postJson(serverBaseUrl + "/verify", body);
-        return response.getString("verdict");
+        JSONObject verdict = response.optJSONObject("verdict");
+        if (verdict == null) {
+            return response.toString();
+        }
+        boolean isTrusted = verdict.optBoolean("isTrusted", false);
+        StringBuilder sb = new StringBuilder();
+        sb.append("verdict: { isTrusted: ").append(isTrusted).append(", reasonCodes: ");
+        sb.append(verdict.optJSONArray("reasonCodes") != null
+                ? verdict.optJSONArray("reasonCodes").toString()
+                : "[]");
+        sb.append(" }");
+        return sb.toString();
     }
 
     private JSONObject postJson(String url, JSONObject body) throws Exception {
